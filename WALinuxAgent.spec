@@ -4,13 +4,15 @@
 #
 Name     : WALinuxAgent
 Version  : 2.1.4
-Release  : 1
+Release  : 2
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
+Source1  : waagent.service
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
 Requires: WALinuxAgent-python
+Requires: WALinuxAgent-config
 Requires: WALinuxAgent-bin
 BuildRequires : pbr
 BuildRequires : pip
@@ -27,9 +29,18 @@ build their own custom packages.
 %package bin
 Summary: bin components for the WALinuxAgent package.
 Group: Binaries
+Requires: WALinuxAgent-config
 
 %description bin
 bin components for the WALinuxAgent package.
+
+
+%package config
+Summary: config components for the WALinuxAgent package.
+Group: Default
+
+%description config
+config components for the WALinuxAgent package.
 
 
 %package python
@@ -50,6 +61,8 @@ python2 setup.py build -b py2
 %install
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot}
+mkdir -p %{buildroot}/usr/lib/systemd/system
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/waagent.service
 
 %files
 %defattr(-,root,root,-)
@@ -58,6 +71,10 @@ python2 -tt setup.py build -b py2 install --root=%{buildroot}
 %defattr(-,root,root,-)
 /usr/sbin/waagent
 /usr/sbin/waagent2.0
+
+%files config
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/waagent.service
 
 %files python
 %defattr(-,root,root,-)
