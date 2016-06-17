@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.1.4
-Release  : 2
+Release  : 3
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source1  : waagent.service
@@ -63,6 +63,10 @@ rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot}
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/waagent.service
+## make_install_append content
+mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/
+ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/waagent.service
+## make_install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -74,6 +78,7 @@ install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/waagent.service
 
 %files config
 %defattr(-,root,root,-)
+/usr/lib/systemd/system/multi-user.target.wants/waagent.service
 /usr/lib/systemd/system/waagent.service
 
 %files python
