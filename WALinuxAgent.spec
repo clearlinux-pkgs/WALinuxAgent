@@ -1,6 +1,6 @@
 Name     : WALinuxAgent
 Version  : 2.1.4
-Release  : 6
+Release  : 7
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source1  : waagent.service
