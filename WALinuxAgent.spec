@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.1.4
-Release  : 3
+Release  : 4
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source1  : waagent.service
@@ -18,6 +18,8 @@ BuildRequires : pbr
 BuildRequires : pip
 BuildRequires : python-dev
 BuildRequires : setuptools
+Patch1: 0001-Add-Clear-Linux-distro-support.patch
+Patch2: 0002-Fix-service-for-running-on-Clear-Linux.patch
 
 %description
 The preferred method of installing the Azure Linux Agent for
@@ -54,6 +56,8 @@ python components for the WALinuxAgent package.
 
 %prep
 %setup -q -n WALinuxAgent-2.1.4
+%patch1 -p1
+%patch2 -p1
 
 %build
 python2 setup.py build -b py2

@@ -1,0 +1,292 @@
+From 4385f7b5d73a3b374717efa84c9b9047cb3aa85a Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Fri, 17 Jun 2016 17:55:08 +0000
+Subject: [PATCH 1/2] Add Clear Linux distro support
+
+---
+ azurelinuxagent/distro/clearlinux/__init__.py    | 18 +++++
+ azurelinuxagent/distro/clearlinux/deprovision.py | 31 ++++++++
+ azurelinuxagent/distro/clearlinux/distro.py      | 29 ++++++++
+ azurelinuxagent/distro/clearlinux/osutil.py      | 72 +++++++++++++++++++
+ config/clearlinux/waagent.conf                   | 91 ++++++++++++++++++++++++
+ 5 files changed, 241 insertions(+)
+ create mode 100644 azurelinuxagent/distro/clearlinux/__init__.py
+ create mode 100644 azurelinuxagent/distro/clearlinux/deprovision.py
+ create mode 100644 azurelinuxagent/distro/clearlinux/distro.py
+ create mode 100644 azurelinuxagent/distro/clearlinux/osutil.py
+ create mode 100644 config/clearlinux/waagent.conf
+
+diff --git a/azurelinuxagent/distro/clearlinux/__init__.py b/azurelinuxagent/distro/clearlinux/__init__.py
+new file mode 100644
+index 0000000..8c1bbdb
+--- /dev/null
++++ b/azurelinuxagent/distro/clearlinux/__init__.py
+@@ -0,0 +1,18 @@
++# Microsoft Azure Linux Agent
++#
++# Copyright 2014 Microsoft Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# Requires Python 2.4+ and Openssl 1.0+
++#
+diff --git a/azurelinuxagent/distro/clearlinux/deprovision.py b/azurelinuxagent/distro/clearlinux/deprovision.py
+new file mode 100644
+index 0000000..f295111
+--- /dev/null
++++ b/azurelinuxagent/distro/clearlinux/deprovision.py
+@@ -0,0 +1,31 @@
++# Microsoft Azure Linux Agent
++#
++# Copyright 2014 Microsoft Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# Requires Python 2.4+ and Openssl 1.0+
++#
++
++import azurelinuxagent.utils.fileutil as fileutil
++from azurelinuxagent.distro.default.deprovision import DeprovisionHandler, DeprovisionAction
++
++class ClearLinuxDeprovisionHandler(DeprovisionHandler):
++    def __init__(self, distro):
++        self.distro = distro
++
++    def setup(self, deluser):
++        warnings, actions = super(ClearLinuxDeprovisionHandler, self).setup(deluser)
++        # Probably should just wipe /etc and /var here
++        return warnings, actions
++
+diff --git a/azurelinuxagent/distro/clearlinux/distro.py b/azurelinuxagent/distro/clearlinux/distro.py
+new file mode 100644
+index 0000000..9823d38
+--- /dev/null
++++ b/azurelinuxagent/distro/clearlinux/distro.py
+@@ -0,0 +1,29 @@
++# Microsoft Azure Linux Agent
++#
++# Copyright 2014 Microsoft Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# Requires Python 2.4+ and Openssl 1.0+
++#
++
++from azurelinuxagent.distro.default.distro import DefaultDistro
++from azurelinuxagent.distro.clearlinux.osutil import ClearLinuxUtil
++from azurelinuxagent.distro.clearlinux.deprovision import ClearLinuxDeprovisionHandler
++
++class ClearLinuxDistro(DefaultDistro):
++    def __init__(self):
++        super(ClearLinuxDistro, self).__init__()
++        self.osutil = ClearLinuxUtil()
++        self.deprovision_handler = ClearLinuxDeprovisionHandler(self)
++
+diff --git a/azurelinuxagent/distro/clearlinux/osutil.py b/azurelinuxagent/distro/clearlinux/osutil.py
+new file mode 100644
+index 0000000..23ce049
+--- /dev/null
++++ b/azurelinuxagent/distro/clearlinux/osutil.py
+@@ -0,0 +1,72 @@
++#
++# Copyright 2014 Microsoft Corporation
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#
++# Requires Python 2.4+ and Openssl 1.0+
++#
++
++import os
++import re
++import pwd
++import shutil
++import socket
++import array
++import struct
++import fcntl
++import time
++import base64
++import azurelinuxagent.logger as logger
++import azurelinuxagent.utils.fileutil as fileutil
++import azurelinuxagent.utils.shellutil as shellutil
++import azurelinuxagent.utils.textutil as textutil
++from azurelinuxagent.distro.default.osutil import DefaultOSUtil
++
++class ClearLinuxUtil(DefaultOSUtil):
++    def __init__(self):
++        super(ClearLinuxUtil, self).__init__()
++        self.agent_conf_file_path = '/usr/share/defaults/waagent.conf'
++
++    def is_dhcp_enabled(self):
++        return True
++
++    def start_network(self) :
++        return shellutil.run("systemctl start systemd-networkd", chk_err=False)
++
++    def restart_if(self, iface):
++        shellutil.run("systemctl restart systemd-networkd")
++
++    def restart_ssh_service(self):
++        # SSH is socket activated. No need to restart it.
++        pass
++
++    def stop_dhcp_service(self):
++        return shellutil.run("systemctl stop systemd-networkd", chk_err=False)
++
++    def start_dhcp_service(self):
++        return shellutil.run("systemctl start systemd-networkd", chk_err=False)
++
++    def start_agent_service(self):
++        return shellutil.run("systemctl start wagent", chk_err=False)
++
++    def stop_agent_service(self):
++        return shellutil.run("systemctl stop wagent", chk_err=False)
++
++    def get_dhcp_pid(self):
++        ret= shellutil.run_get_output("pidof systemd-networkd")
++        return ret[1] if ret[0] == 0 else None
++
++    def conf_sshd(self, disable_password):
++        # Don't whack the system default sshd conf
++        pass
++
+diff --git a/config/clearlinux/waagent.conf b/config/clearlinux/waagent.conf
+new file mode 100644
+index 0000000..5af0baf
+--- /dev/null
++++ b/config/clearlinux/waagent.conf
+@@ -0,0 +1,91 @@
++#
++# Microsoft Azure Linux Agent Configuration
++#
++
++# Specified program is invoked with the argument "Ready" when we report ready status
++# to the endpoint server.
++Role.StateConsumer=None
++
++# Specified program is invoked with XML file argument specifying role
++#  configuration.
++Role.ConfigurationConsumer=None
++
++# Specified program is invoked with XML file argument specifying role topology.
++Role.TopologyConsumer=None
++
++# Enable instance creation
++Provisioning.Enabled=y
++
++# Password authentication for root account will be unavailable.
++Provisioning.DeleteRootPassword=y
++
++# Generate fresh host key pair.
++Provisioning.RegenerateSshHostKeyPair=y
++
++# Supported values are "rsa", "dsa" and "ecdsa".
++Provisioning.SshHostKeyPairType=rsa
++
++# Monitor host name changes and publish changes via DHCP requests.
++Provisioning.MonitorHostName=y
++
++# Decode CustomData from Base64.
++Provisioning.DecodeCustomData=y
++
++# Execute CustomData after provisioning.
++Provisioning.ExecuteCustomData=n
++
++# Algorithm used by crypt when generating password hash.
++#Provisioning.PasswordCryptId=6
++
++# Length of random salt used when generating password hash.
++#Provisioning.PasswordCryptSaltLength=10
++
++# Allow reset password of sys user
++Provisioning.AllowResetSysUser=n
++
++# Format if unformatted. If 'n', resource disk will not be mounted.
++ResourceDisk.Format=y
++
++# File system on the resource disk
++# Typically ext3 or ext4. FreeBSD images should use 'ufs2' here.
++ResourceDisk.Filesystem=ext4
++
++# Mount point for the resource disk
++ResourceDisk.MountPoint=/mnt/resource
++
++# Create and use swapfile on resource disk.
++ResourceDisk.EnableSwap=n
++
++# Size of the swapfile.
++ResourceDisk.SwapSizeMB=0
++
++# Enable verbose logging (y|n)
++Logs.Verbose=n
++
++# Root device timeout in seconds.
++OS.RootDeviceScsiTimeout=300
++
++# If "None", the system default version is used.
++OS.OpensslPath=None
++
++# If set, agent will use proxy server to access internet
++#HttpProxy.Host=None
++#HttpProxy.Port=None
++
++# Detect Scvmm environment, default is n
++# DetectScvmmEnv=n
++
++#
++# Lib.Dir=/var/lib/waagent
++
++#
++# DVD.MountPoint=/mnt/cdrom/secure
++
++#
++# Pid.File=/var/run/waagent.pid
++
++#
++# Extension.LogDir=/var/log/azure
++
++#
++# Home.Dir=/home
+-- 
+2.9.0
+
