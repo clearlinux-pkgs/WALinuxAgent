@@ -1,4 +1,4 @@
-From 86fcffab297a2185a6ac184719fdd85ec63167a2 Mon Sep 17 00:00:00 2001
+From 642c336f645f8aacca8b7a52b97c81461eede304 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 17 Jun 2016 17:55:08 +0000
 Subject: [PATCH] Add Clear Linux distro support
@@ -8,10 +8,11 @@ Subject: [PATCH] Add Clear Linux distro support
  azurelinuxagent/distro/clearlinux/deprovision.py | 31 ++++++++
  azurelinuxagent/distro/clearlinux/distro.py      | 29 ++++++++
  azurelinuxagent/distro/clearlinux/osutil.py      | 72 +++++++++++++++++++
+ azurelinuxagent/distro/loader.py                 |  3 +
  config/clearlinux/waagent.conf                   | 91 ++++++++++++++++++++++++
  init/clearlinux/waagent.service                  | 12 ++++
  setup.py                                         |  6 ++
- 7 files changed, 259 insertions(+)
+ 8 files changed, 262 insertions(+)
  create mode 100644 azurelinuxagent/distro/clearlinux/__init__.py
  create mode 100644 azurelinuxagent/distro/clearlinux/deprovision.py
  create mode 100644 azurelinuxagent/distro/clearlinux/distro.py
@@ -193,6 +194,27 @@ index 0000000..3b690f7
 +        # Don't whack the system default sshd conf
 +        pass
 +
+diff --git a/azurelinuxagent/distro/loader.py b/azurelinuxagent/distro/loader.py
+index f6800b3..7f47ffc 100644
+--- a/azurelinuxagent/distro/loader.py
++++ b/azurelinuxagent/distro/loader.py
+@@ -25,6 +25,7 @@ from azurelinuxagent.distro.ubuntu.distro import UbuntuDistro, \
+                                                  Ubuntu12Distro, \
+                                                  UbuntuSnappyDistro
+ from azurelinuxagent.distro.redhat.distro import RedhatDistro, Redhat6xDistro
++from azurelinuxagent.distro.clearlinux.distro import ClearLinuxDistro
+ from azurelinuxagent.distro.coreos.distro import CoreOSDistro
+ from azurelinuxagent.distro.suse.distro import SUSE11Distro, SUSEDistro
+ from azurelinuxagent.distro.debian.distro import DebianDistro
+@@ -45,6 +46,8 @@ def get_distro(distro_name=DISTRO_NAME, distro_version=DISTRO_VERSION,
+             return UbuntuDistro()
+     if distro_name == "coreos":
+         return CoreOSDistro()
++    if distro_name == "clear linux software for intel architecture":
++        return ClearLinuxDistro()
+     if distro_name == "suse":
+         if distro_full_name=='SUSE Linux Enterprise Server' and \
+            Version(distro_version) < Version('12') or \
 diff --git a/config/clearlinux/waagent.conf b/config/clearlinux/waagent.conf
 new file mode 100644
 index 0000000..5af0baf
@@ -309,14 +331,14 @@ index 0000000..16de66b
 +[Install]
 +WantedBy=multi-user.target
 diff --git a/setup.py b/setup.py
-index 0cfecff..2994431 100755
+index 0cfecff..77388f2 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -81,6 +81,12 @@ def get_data_files(name, version, fullname):
          set_logrotate_files(data_files)
          set_files(data_files, dest="/usr/share/oem", 
                    src=["init/coreos/cloud-config.yml"])
-+    elif name == 'clearlinux':
++    elif name == 'clear linux software for intel architecture':
 +        set_bin_files(data_files, dest="/usr/bin")
 +        set_conf_files(data_files, dest="/usr/share/defaults/waagent",
 +                       src=["config/clearlinux/waagent.conf"])
