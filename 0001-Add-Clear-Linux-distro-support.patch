@@ -1,7 +1,7 @@
-From 4385f7b5d73a3b374717efa84c9b9047cb3aa85a Mon Sep 17 00:00:00 2001
+From 86fcffab297a2185a6ac184719fdd85ec63167a2 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Fri, 17 Jun 2016 17:55:08 +0000
-Subject: [PATCH 1/2] Add Clear Linux distro support
+Subject: [PATCH] Add Clear Linux distro support
 
 ---
  azurelinuxagent/distro/clearlinux/__init__.py    | 18 +++++
@@ -9,12 +9,15 @@ Subject: [PATCH 1/2] Add Clear Linux distro support
  azurelinuxagent/distro/clearlinux/distro.py      | 29 ++++++++
  azurelinuxagent/distro/clearlinux/osutil.py      | 72 +++++++++++++++++++
  config/clearlinux/waagent.conf                   | 91 ++++++++++++++++++++++++
- 5 files changed, 241 insertions(+)
+ init/clearlinux/waagent.service                  | 12 ++++
+ setup.py                                         |  6 ++
+ 7 files changed, 259 insertions(+)
  create mode 100644 azurelinuxagent/distro/clearlinux/__init__.py
  create mode 100644 azurelinuxagent/distro/clearlinux/deprovision.py
  create mode 100644 azurelinuxagent/distro/clearlinux/distro.py
  create mode 100644 azurelinuxagent/distro/clearlinux/osutil.py
  create mode 100644 config/clearlinux/waagent.conf
+ create mode 100755 init/clearlinux/waagent.service
 
 diff --git a/azurelinuxagent/distro/clearlinux/__init__.py b/azurelinuxagent/distro/clearlinux/__init__.py
 new file mode 100644
@@ -114,7 +117,7 @@ index 0000000..9823d38
 +
 diff --git a/azurelinuxagent/distro/clearlinux/osutil.py b/azurelinuxagent/distro/clearlinux/osutil.py
 new file mode 100644
-index 0000000..23ce049
+index 0000000..3b690f7
 --- /dev/null
 +++ b/azurelinuxagent/distro/clearlinux/osutil.py
 @@ -0,0 +1,72 @@
@@ -155,7 +158,7 @@ index 0000000..23ce049
 +class ClearLinuxUtil(DefaultOSUtil):
 +    def __init__(self):
 +        super(ClearLinuxUtil, self).__init__()
-+        self.agent_conf_file_path = '/usr/share/defaults/waagent.conf'
++        self.agent_conf_file_path = '/usr/share/defaults/waagent/waagent.conf'
 +
 +    def is_dhcp_enabled(self):
 +        return True
@@ -287,6 +290,41 @@ index 0000000..5af0baf
 +
 +#
 +# Home.Dir=/home
+diff --git a/init/clearlinux/waagent.service b/init/clearlinux/waagent.service
+new file mode 100755
+index 0000000..16de66b
+--- /dev/null
++++ b/init/clearlinux/waagent.service
+@@ -0,0 +1,12 @@
++[Unit]
++Description=Azure Linux Agent
++After=network.target
++After=sshd.service
++
++[Service]
++Type=simple
++ExecStart=/usr/bin/waagent -daemon
++Restart=always
++
++[Install]
++WantedBy=multi-user.target
+diff --git a/setup.py b/setup.py
+index 0cfecff..2994431 100755
+--- a/setup.py
++++ b/setup.py
+@@ -81,6 +81,12 @@ def get_data_files(name, version, fullname):
+         set_logrotate_files(data_files)
+         set_files(data_files, dest="/usr/share/oem", 
+                   src=["init/coreos/cloud-config.yml"])
++    elif name == 'clearlinux':
++        set_bin_files(data_files, dest="/usr/bin")
++        set_conf_files(data_files, dest="/usr/share/defaults/waagent",
++                       src=["config/clearlinux/waagent.conf"])
++        set_systemd_files(data_files, dest='/usr/lib/systemd/system',
++                          src=["init/clearlinux/waagent.service"])
+     elif name == 'ubuntu':
+         set_bin_files(data_files)
+         set_conf_files(data_files, src=["config/ubuntu/waagent.conf"])
 -- 
 2.9.0
 
