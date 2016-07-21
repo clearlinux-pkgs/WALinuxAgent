@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.1.4
-Release  : 10
+Release  : 11
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.4.tar.gz
 Summary  : No detailed summary available
@@ -67,6 +67,7 @@ python components for the WALinuxAgent package.
 %patch1 -p1
 
 %build
+export LANG=C
 python2 setup.py build -b py2
 
 %install
