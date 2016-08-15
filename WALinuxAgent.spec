@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.1.5
-Release  : 15
+Release  : 16
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.1.5.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.1.5.tar.gz
 Summary  : No detailed summary available
@@ -75,8 +75,8 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 
 %files bin
 %defattr(-,root,root,-)
+%exclude /usr/sbin/waagent2.0
 /usr/sbin/waagent
-/usr/sbin/waagent2.0
 
 %files config
 %defattr(-,root,root,-)
