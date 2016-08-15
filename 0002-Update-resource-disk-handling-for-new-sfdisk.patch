@@ -1,7 +1,7 @@
-From 2ffb854d399c7db07671ec8d1e5f47e040818e46 Mon Sep 17 00:00:00 2001
+From 558a3e0c9dfda7ef82c60b2fc7e2291c9c98fcce Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Mon, 15 Aug 2016 22:10:59 +0000
-Subject: [PATCH 2/2] Update resource disk handling for new sfdisk
+Subject: [PATCH 2/3] Update resource disk handling for new sfdisk
 
 ---
  azurelinuxagent/daemon/resourcedisk/default.py | 6 +++---
