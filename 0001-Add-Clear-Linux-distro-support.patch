@@ -1,4 +1,4 @@
-From e22abe131556bfb5c2d94982e94585f58a1ec8f2 Mon Sep 17 00:00:00 2001
+From e75ba64b40922d5d0b67e53873d7dd46bc468ccd Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Mon, 15 Aug 2016 22:10:23 +0000
 Subject: [PATCH 1/2] Add Clear Linux distro support
@@ -6,9 +6,9 @@ Subject: [PATCH 1/2] Add Clear Linux distro support
 ---
  azurelinuxagent/common/osutil/clearlinux.py  | 91 ++++++++++++++++++++++++++++
  azurelinuxagent/common/osutil/factory.py     |  3 +
- azurelinuxagent/pa/deprovision/clearlinux.py | 32 ++++++++++
+ azurelinuxagent/pa/deprovision/clearlinux.py | 31 ++++++++++
  azurelinuxagent/pa/deprovision/factory.py    |  3 +
- 4 files changed, 129 insertions(+)
+ 4 files changed, 128 insertions(+)
  create mode 100644 azurelinuxagent/common/osutil/clearlinux.py
  create mode 100644 azurelinuxagent/pa/deprovision/clearlinux.py
 
@@ -132,10 +132,10 @@ index 5e8ae6e..35875f4 100644
             Version(distro_version) == Version("12.10"):
 diff --git a/azurelinuxagent/pa/deprovision/clearlinux.py b/azurelinuxagent/pa/deprovision/clearlinux.py
 new file mode 100644
-index 0000000..077a9dd
+index 0000000..097891b
 --- /dev/null
 +++ b/azurelinuxagent/pa/deprovision/clearlinux.py
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,31 @@
 +# Microsoft Azure Linux Agent
 +#
 +# Copyright 2014 Microsoft Corporation
@@ -167,7 +167,6 @@ index 0000000..077a9dd
 +        warnings, actions = super(ClearLinuxDeprovisionHandler, self).setup(deluser)
 +        # Probably should just wipe /etc and /var here
 +        return warnings, actions
-+
 diff --git a/azurelinuxagent/pa/deprovision/factory.py b/azurelinuxagent/pa/deprovision/factory.py
 index dd01633..72a5be1 100644
 --- a/azurelinuxagent/pa/deprovision/factory.py

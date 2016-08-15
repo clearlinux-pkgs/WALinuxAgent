@@ -1,4 +1,4 @@
-From 1182e39cd46510e1d390fa18417298f500d998c1 Mon Sep 17 00:00:00 2001
+From 2ffb854d399c7db07671ec8d1e5f47e040818e46 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Mon, 15 Aug 2016 22:10:59 +0000
 Subject: [PATCH 2/2] Update resource disk handling for new sfdisk
