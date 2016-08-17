@@ -1,14 +1,12 @@
-From 3135dc8e5af9a3904c33badda120c309539003e7 Mon Sep 17 00:00:00 2001
-From: Ikey Doherty <michael.i.doherty@intel.com>
-Date: Mon, 15 Aug 2016 15:32:21 -0700
+From 3e6e9627560f7f70706e58baaf5c4ff6630e65ce Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Wed, 17 Aug 2016 22:22:58 +0000
 Subject: [PATCH 3/3] Make the majority of the codebase PEP8 compliant
 
-Conforming to modern Python community guidelines such as PEP8 enables rapid
-testing, deployment and development of WALinuxAgeny by immediately knowing
-that the code changes are valid, having first passed through the 'pep8'
-and 'flake8' tooling.
-
-Signed-off-by: Ikey Doherty <michael.i.doherty@intel.com>
+Conforming to modern Python community guidelines such as PEP8 enables
+rapid testing, deployment and development of WALinuxAgeny by immediately
+knowing that the code changes are valid, having first passed through the
+'pep8' and 'flake8' tooling.
 ---
  azurelinuxagent/agent.py                         |  36 ++--
  azurelinuxagent/common/__init__.py               |   1 -
@@ -5662,7 +5660,7 @@ index ca7ad20..29601b8 100755
  print "Writing {0}".format(manifest_path)
  with open(manifest_path, mode='w') as manifest:
 diff --git a/setup.py b/setup.py
-index da91778..811d8db 100755
+index 40a42e3..8346d51 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -19,42 +19,52 @@
@@ -5756,9 +5754,9 @@ index da91778..811d8db 100755
 -        set_files(data_files, dest="/usr/share/oem", 
 +        set_files(data_files, dest="/usr/share/oem",
                    src=["init/coreos/cloud-config.yml"])
-     elif name == 'ubuntu':
-         set_bin_files(data_files)
-@@ -92,17 +102,17 @@ def get_data_files(name, version, fullname):
+     elif name == 'clear linux software for intel architecture':
+         set_bin_files(data_files, dest="/usr/bin")
+@@ -98,17 +108,17 @@ def get_data_files(name, version, fullname):
          set_logrotate_files(data_files)
          set_udev_files(data_files, src=["config/99-azure-product-uuid.rules"])
          if version.startswith("12") or version.startswith("14"):
@@ -5781,7 +5779,7 @@ index da91778..811d8db 100755
                                src=["init/ubuntu/walinuxagent.service"])
      elif name == 'suse':
          set_bin_files(data_files)
-@@ -112,17 +122,17 @@ def get_data_files(name, version, fullname):
+@@ -118,17 +128,17 @@ def get_data_files(name, version, fullname):
          if fullname == 'SUSE Linux Enterprise Server' and \
                  version.startswith('11') or \
                  fullname == 'openSUSE' and version.startswith('13.1'):
@@ -5802,7 +5800,7 @@ index da91778..811d8db 100755
          set_bin_files(data_files)
          set_conf_files(data_files)
          set_logrotate_files(data_files)
-@@ -130,6 +140,7 @@ def get_data_files(name, version, fullname):
+@@ -136,6 +146,7 @@ def get_data_files(name, version, fullname):
          set_sysv_files(data_files)
      return data_files
  
@@ -5810,7 +5808,7 @@ index da91778..811d8db 100755
  class install(_install):
      user_options = _install.user_options + [
          # This will magically show up in member variable 'init_system'
-@@ -143,13 +154,13 @@ class install(_install):
+@@ -149,13 +160,13 @@ class install(_install):
  
      def initialize_options(self):
          _install.initialize_options(self)
@@ -5826,7 +5824,7 @@ index da91778..811d8db 100755
      def finalize_options(self):
          _install.finalize_options(self)
          if self.skip_data_files:
-@@ -172,14 +183,14 @@ setuptools.setup(
+@@ -178,14 +189,14 @@ setuptools.setup(
      name=AGENT_NAME,
      version=AGENT_VERSION,
      long_description=AGENT_DESCRIPTION,
