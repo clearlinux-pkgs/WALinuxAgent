@@ -1,4 +1,4 @@
-From c0d9375cd3177521903d70502c8e2484804d6137 Mon Sep 17 00:00:00 2001
+From f6eb9b3841ac9c622010b62a24664df125242ef2 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Mon, 15 Aug 2016 22:10:23 +0000
 Subject: [PATCH 1/2] Add Clear Linux distro support
@@ -8,10 +8,10 @@ Subject: [PATCH 1/2] Add Clear Linux distro support
  azurelinuxagent/common/osutil/factory.py     |  3 +
  azurelinuxagent/pa/deprovision/clearlinux.py | 31 ++++++++++
  azurelinuxagent/pa/deprovision/factory.py    |  3 +
- config/clearlinux/waagent.conf               | 63 +++++++++++++++++++
+ config/clearlinux/waagent.conf               | 67 ++++++++++++++++++++
  init/clearlinux/waagent.service              | 16 +++++
  setup.py                                     |  6 ++
- 7 files changed, 213 insertions(+)
+ 7 files changed, 217 insertions(+)
  create mode 100644 azurelinuxagent/common/osutil/clearlinux.py
  create mode 100644 azurelinuxagent/pa/deprovision/clearlinux.py
  create mode 100644 config/clearlinux/waagent.conf
@@ -115,7 +115,7 @@ index 0000000..5116ff4
 +            raise OSUtilError("Failed to delete root password:{0}".format(e))
 +        pass
 diff --git a/azurelinuxagent/common/osutil/factory.py b/azurelinuxagent/common/osutil/factory.py
-index c3bd07b..961dc09 100644
+index c3bd07b..9163b7a 100644
 --- a/azurelinuxagent/common/osutil/factory.py
 +++ b/azurelinuxagent/common/osutil/factory.py
 @@ -21,6 +21,7 @@ from azurelinuxagent.common.version import DISTRO_NAME, DISTRO_VERSION, \
@@ -130,7 +130,7 @@ index c3bd07b..961dc09 100644
  
  def get_osutil(distro_name=DISTRO_NAME, distro_version=DISTRO_VERSION,
                 distro_full_name=DISTRO_FULL_NAME):
-+    if distro_name == "clear linux":
++    if distro_name == "clear linux software for intel architecture":
 +        return ClearLinuxUtil()
      if distro_name == "ubuntu":
          if Version(distro_version) == Version("12.04") or \
@@ -195,10 +195,10 @@ index dd01633..72a5be1 100644
  
 diff --git a/config/clearlinux/waagent.conf b/config/clearlinux/waagent.conf
 new file mode 100644
-index 0000000..aa47bfd
+index 0000000..8d8db28
 --- /dev/null
 +++ b/config/clearlinux/waagent.conf
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,67 @@
 +#
 +# Microsoft Azure Linux Agent Configuration
 +#
@@ -262,6 +262,10 @@ index 0000000..aa47bfd
 +
 +# If "None", the system default version is used.
 +OS.OpensslPath=None
++
++# Enable or disable self-update, default is enabled
++AutoUpdate.Enabled=n
++AutoUpdate.GAFamily=Prod
 diff --git a/init/clearlinux/waagent.service b/init/clearlinux/waagent.service
 new file mode 100644
 index 0000000..9afee45
