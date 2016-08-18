@@ -1,14 +1,14 @@
-From 71e448af9616982098e9166c1be46aa77995e641 Mon Sep 17 00:00:00 2001
+From fe6fa1824f38320b59ebb4659140d07f1676d4a0 Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Mon, 15 Aug 2016 22:10:59 +0000
-Subject: [PATCH 2/3] Update resource disk handling for new sfdisk
+Subject: [PATCH 2/2] Update resource disk handling for new sfdisk
 
 ---
  azurelinuxagent/daemon/resourcedisk/default.py | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/azurelinuxagent/daemon/resourcedisk/default.py b/azurelinuxagent/daemon/resourcedisk/default.py
-index d2e400a..5e3bff5 100644
+index 2621d8e..d2b2fcf 100644
 --- a/azurelinuxagent/daemon/resourcedisk/default.py
 +++ b/azurelinuxagent/daemon/resourcedisk/default.py
 @@ -120,11 +120,11 @@ class ResourceDiskHandler(object):
@@ -27,5 +27,5 @@ index d2e400a..5e3bff5 100644
  
          logger.info("Mount resource disk")
 -- 
-2.9.2
+2.9.3
 
