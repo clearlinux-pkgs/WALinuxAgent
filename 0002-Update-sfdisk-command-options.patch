@@ -1,0 +1,34 @@
+From b9fb3420c0406365177252b20b0801099874db3d Mon Sep 17 00:00:00 2001
+From: William Douglas <william.douglas@intel.com>
+Date: Thu, 20 Oct 2016 17:07:24 +0000
+Subject: [PATCH 2/2] Update sfdisk command options
+
+The sfdisk in Clear Linux does not support the -c option so use
+--part-type instead.
+---
+ azurelinuxagent/daemon/resourcedisk/default.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/azurelinuxagent/daemon/resourcedisk/default.py b/azurelinuxagent/daemon/resourcedisk/default.py
+index 9ffe280..acad045 100644
+--- a/azurelinuxagent/daemon/resourcedisk/default.py
++++ b/azurelinuxagent/daemon/resourcedisk/default.py
+@@ -129,12 +129,12 @@ class ResourceDiskHandler(object):
+                 shellutil.run(mkfs_string)
+         else:
+             logger.info("GPT not detected, determining filesystem")
+-            ret = shellutil.run_get_output("sfdisk -q -c {0} 1".format(device))
+-            ptype = ret[1].rstrip()
++            ret = shellutil.run_get_output("sfdisk -q --part-type {0} 1".format(device))
++            ptype = ret[1].strip()
+             if ptype == "7" and fs != "ntfs":
+                 logger.info("The partition is formatted with ntfs, updating "
+                             "partition type to 83")
+-                shellutil.run("sfdisk -c {0} 1 83".format(device))
++                shellutil.run("sfdisk --part-type {0} 1 83".format(device))
+                 logger.info("Format partition [{0}]", mkfs_string)
+                 shellutil.run(mkfs_string)
+             else:
+-- 
+2.10.1
+
