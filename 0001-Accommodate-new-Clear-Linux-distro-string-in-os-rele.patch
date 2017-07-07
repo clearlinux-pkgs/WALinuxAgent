@@ -1,0 +1,26 @@
+From 5a9f0b502a4e9491e03403074f80d5f05bcd942a Mon Sep 17 00:00:00 2001
+From: Robert Nesius <robert.a.nesius@intel.com>
+Date: Fri, 7 Jul 2017 00:43:55 +0000
+Subject: [PATCH 1/2] Accommodate new Clear Linux distro string in os-release.
+
+---
+ azurelinuxagent/common/osutil/factory.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/azurelinuxagent/common/osutil/factory.py b/azurelinuxagent/common/osutil/factory.py
+index 2be90ab..e63be07 100644
+--- a/azurelinuxagent/common/osutil/factory.py
++++ b/azurelinuxagent/common/osutil/factory.py
+@@ -41,7 +41,8 @@ def get_osutil(distro_name=DISTRO_NAME,
+     if distro_name == "arch":
+         return ArchUtil()
+ 
+-    if distro_name == "clear linux software for intel architecture":
++    if distro_name == "clear linux os for intel architecture" \
++            or distro_name == "clear linux software for intel architecture": 
+         return ClearLinuxUtil()
+ 
+     if distro_name == "ubuntu":
+-- 
+2.13.2
+

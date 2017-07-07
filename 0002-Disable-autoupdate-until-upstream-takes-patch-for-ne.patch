@@ -1,0 +1,32 @@
+From 6b667042d7e7bbbbd00d25ad584d6fc289711c2f Mon Sep 17 00:00:00 2001
+From: Robert Nesius <robert.a.nesius@intel.com>
+Date: Fri, 7 Jul 2017 00:46:09 +0000
+Subject: [PATCH 2/2] Disable autoupdate until upstream takes patch for new
+ os-release
+
+---
+ azurelinuxagent/common/conf.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/azurelinuxagent/common/conf.py b/azurelinuxagent/common/conf.py
+index f0c3a9a..5a98d64 100644
+--- a/azurelinuxagent/common/conf.py
++++ b/azurelinuxagent/common/conf.py
+@@ -242,11 +242,11 @@ def get_autoupdate_gafamily(conf=__conf__):
+ 
+ 
+ def get_autoupdate_enabled(conf=__conf__):
+-    return conf.get_switch("AutoUpdate.Enabled", True)
++    return conf.get_switch("AutoUpdate.Enabled", False)
+ 
+ 
+ def get_autoupdate_frequency(conf=__conf__):
+     return conf.get_int("Autoupdate.Frequency", 3600)
+ 
+ def get_enable_overprovisioning(conf=__conf__):
+-    return conf.get_switch("EnableOverProvisioning", False)
+\ No newline at end of file
++    return conf.get_switch("EnableOverProvisioning", False)
+-- 
+2.13.2
+
