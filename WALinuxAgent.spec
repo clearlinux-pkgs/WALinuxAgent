@@ -4,16 +4,17 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.12
-Release  : 36
+Release  : 41
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.12.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.12.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
+Requires: WALinuxAgent-bin
 Requires: WALinuxAgent-python
 Requires: WALinuxAgent-autostart
 Requires: WALinuxAgent-config
-Requires: WALinuxAgent-bin
+Requires: WALinuxAgent-data
 BuildRequires : pbr
 BuildRequires : pip
 BuildRequires : python-dev
@@ -21,6 +22,7 @@ BuildRequires : python3-dev
 BuildRequires : setuptools
 Patch1: 0001-Accommodate-new-Clear-Linux-distro-string-in-os-rele.patch
 Patch2: 0002-Disable-autoupdate-until-upstream-takes-patch-for-ne.patch
+Patch3: 0003-Update-setup.py-for-os-release-change-in-Clear-Linux.patch
 
 %description
 ### INTRODUCTION
@@ -39,6 +41,7 @@ autostart components for the WALinuxAgent package.
 %package bin
 Summary: bin components for the WALinuxAgent package.
 Group: Binaries
+Requires: WALinuxAgent-data
 Requires: WALinuxAgent-config
 
 %description bin
@@ -51,6 +54,14 @@ Group: Default
 
 %description config
 config components for the WALinuxAgent package.
+
+
+%package data
+Summary: data components for the WALinuxAgent package.
+Group: Data
+
+%description data
+data components for the WALinuxAgent package.
 
 
 %package python
@@ -66,18 +77,19 @@ python components for the WALinuxAgent package.
 %setup -q -n WALinuxAgent-2.2.12
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1499392834
+export SOURCE_DATE_EPOCH=1499762993
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1499392834
+export SOURCE_DATE_EPOCH=1499762993
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
@@ -98,12 +110,17 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 
 %files bin
 %defattr(-,root,root,-)
-%exclude /usr/sbin/waagent
-%exclude /usr/sbin/waagent2.0
+%exclude /usr/bin/waagent2.0
+/usr/bin/waagent
 
 %files config
 %defattr(-,root,root,-)
 %exclude /usr/lib/systemd/system/multi-user.target.wants/waagent.service
+/usr/lib/systemd/system/waagent.service
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/defaults/waagent/waagent.conf
 
 %files python
 %defattr(-,root,root,-)
