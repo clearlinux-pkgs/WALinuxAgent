@@ -17,7 +17,7 @@ index 2be90ab..e63be07 100644
  
 -    if distro_name == "clear linux software for intel architecture":
 +    if distro_name == "clear linux os for intel architecture" \
-+            or distro_name == "clear linux software for intel architecture": 
++            or distro_name == "clear linux software for intel architecture":
          return ClearLinuxUtil()
  
      if distro_name == "ubuntu":
