@@ -4,13 +4,14 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.12
-Release  : 41
+Release  : 42
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.12.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.12.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
 Requires: WALinuxAgent-bin
+Requires: WALinuxAgent-legacypython
 Requires: WALinuxAgent-python
 Requires: WALinuxAgent-autostart
 Requires: WALinuxAgent-config
@@ -64,9 +65,18 @@ Group: Data
 data components for the WALinuxAgent package.
 
 
+%package legacypython
+Summary: legacypython components for the WALinuxAgent package.
+Group: Default
+
+%description legacypython
+legacypython components for the WALinuxAgent package.
+
+
 %package python
 Summary: python components for the WALinuxAgent package.
 Group: Default
+Requires: WALinuxAgent-legacypython
 Provides: walinuxagent-python
 
 %description python
@@ -84,12 +94,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1499762993
+export SOURCE_DATE_EPOCH=1505073585
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1499762993
+export SOURCE_DATE_EPOCH=1505073585
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
@@ -122,7 +132,10 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %defattr(-,root,root,-)
 /usr/share/defaults/waagent/waagent.conf
 
-%files python
+%files legacypython
 %defattr(-,root,root,-)
 /usr/lib/python2*/*
+
+%files python
+%defattr(-,root,root,-)
 /usr/lib/python3*/*
