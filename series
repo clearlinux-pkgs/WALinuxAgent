@@ -1,3 +1,3 @@
-0001-Accommodate-new-Clear-Linux-distro-string-in-os-rele.patch
-0002-Disable-autoupdate-until-upstream-takes-patch-for-ne.patch
-0003-Update-setup.py-for-os-release-change-in-Clear-Linux.patch
+#0001-Accommodate-new-Clear-Linux-distro-string-in-os-rele.patch
+#0002-Disable-autoupdate-until-upstream-takes-patch-for-ne.patch
+#0003-Update-setup.py-for-os-release-change-in-Clear-Linux.patch
