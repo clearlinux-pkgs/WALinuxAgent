@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.17
-Release  : 43
+Release  : 44
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.17.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.17.tar.gz
 Summary  : No detailed summary available
@@ -12,10 +12,11 @@ Group    : Development/Tools
 License  : Apache-2.0
 Requires: WALinuxAgent-bin
 Requires: WALinuxAgent-legacypython
-Requires: WALinuxAgent-python
+Requires: WALinuxAgent-python3
 Requires: WALinuxAgent-autostart
 Requires: WALinuxAgent-config
 Requires: WALinuxAgent-data
+Requires: WALinuxAgent-python
 BuildRequires : pbr
 BuildRequires : pip
 BuildRequires : python-dev
@@ -65,6 +66,7 @@ data components for the WALinuxAgent package.
 %package legacypython
 Summary: legacypython components for the WALinuxAgent package.
 Group: Default
+Requires: python-core
 
 %description legacypython
 legacypython components for the WALinuxAgent package.
@@ -74,10 +76,20 @@ legacypython components for the WALinuxAgent package.
 Summary: python components for the WALinuxAgent package.
 Group: Default
 Requires: WALinuxAgent-legacypython
+Requires: WALinuxAgent-python3
 Provides: walinuxagent-python
 
 %description python
 python components for the WALinuxAgent package.
+
+
+%package python3
+Summary: python3 components for the WALinuxAgent package.
+Group: Default
+Requires: python3-core
+
+%description python3
+python3 components for the WALinuxAgent package.
 
 
 %prep
@@ -88,12 +100,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1505672562
+export SOURCE_DATE_EPOCH=1507180844
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1505672562
+export SOURCE_DATE_EPOCH=1507180844
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
@@ -133,5 +145,8 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 /usr/lib/python2*/*
 
 %files python
+%defattr(-,root,root,-)
+
+%files python3
 %defattr(-,root,root,-)
 /usr/lib/python3*/*
