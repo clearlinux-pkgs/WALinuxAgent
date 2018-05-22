@@ -1,4 +1,4 @@
-From 55e6c5b7946de0155361e62bd4b9d2488547687a Mon Sep 17 00:00:00 2001
+From 34439cc35d857d43e1068bb8ed9628981dd76a5d Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Wed, 7 Feb 2018 21:33:30 +0000
 Subject: [PATCH] Allow detection of Clear Linux OS in python3
@@ -14,11 +14,27 @@ Also as the distribution detection is used in the setup script, hard
 code Clear Linux as the distribution to avoid needing to work with
 detection for now.
 ---
- azurelinuxagent/common/version.py | 17 ++++++++++++++++-
- init/clearlinux/waagent.service   |  1 +
- setup.py                          |  6 +++---
- 3 files changed, 20 insertions(+), 4 deletions(-)
+ azurelinuxagent/common/osutil/factory.py  |  3 +--
+ azurelinuxagent/common/version.py         | 17 ++++++++++++++++-
+ azurelinuxagent/pa/deprovision/factory.py |  2 +-
+ init/clearlinux/waagent.service           |  1 +
+ setup.py                                  |  9 ++++-----
+ 5 files changed, 23 insertions(+), 9 deletions(-)
 
+diff --git a/azurelinuxagent/common/osutil/factory.py b/azurelinuxagent/common/osutil/factory.py
+index 1b4e2cb..3f4505d 100644
+--- a/azurelinuxagent/common/osutil/factory.py
++++ b/azurelinuxagent/common/osutil/factory.py
+@@ -42,8 +42,7 @@ def get_osutil(distro_name=DISTRO_NAME,
+     if distro_name == "arch":
+         return ArchUtil()
+ 
+-    if distro_name == "clear linux os for intel architecture" \
+-            or distro_name == "clear linux software for intel architecture":
++    if distro_name == "Clear Linux OS for Intel Architecture":
+         return ClearLinuxUtil()
+ 
+     if distro_name == "ubuntu":
 diff --git a/azurelinuxagent/common/version.py b/azurelinuxagent/common/version.py
 index b56ff93..c5f3943 100644
 --- a/azurelinuxagent/common/version.py
@@ -56,6 +72,19 @@ index b56ff93..c5f3943 100644
      # The platform.py lib has issue with detecting oracle linux distribution.
      # Merge the following patch provided by oracle as a temporary fix.
      if os.path.exists("/etc/oracle-release"):
+diff --git a/azurelinuxagent/pa/deprovision/factory.py b/azurelinuxagent/pa/deprovision/factory.py
+index 5ac35a7..c8248b5 100644
+--- a/azurelinuxagent/pa/deprovision/factory.py
++++ b/azurelinuxagent/pa/deprovision/factory.py
+@@ -35,7 +35,7 @@ def get_deprovision_handler(distro_name=DISTRO_NAME,
+         return UbuntuDeprovisionHandler()
+     if distro_name == "coreos":
+         return CoreOSDeprovisionHandler()
+-    if distro_name == "clear linux":
++    if distro_name == "Clear Linux OS for Intel Architecture":
+         return ClearLinuxDeprovisionHandler()
+ 
+     return DeprovisionHandler()
 diff --git a/init/clearlinux/waagent.service b/init/clearlinux/waagent.service
 index 9afee45..b2d0e08 100644
 --- a/init/clearlinux/waagent.service
@@ -69,10 +98,20 @@ index 9afee45..b2d0e08 100644
  Restart=always
  RestartSec=5
 diff --git a/setup.py b/setup.py
-index f59f829..c82811c 100755
+index f59f829..3f8b894 100755
 --- a/setup.py
 +++ b/setup.py
-@@ -174,9 +174,9 @@ class install(_install):
+@@ -106,8 +106,7 @@ def get_data_files(name, version, fullname):
+         set_udev_files(data_files)
+         set_files(data_files, dest="/usr/share/oem",
+                   src=["init/coreos/cloud-config.yml"])
+-    elif name == 'clear linux os for intel architecture' \
+-            or name == 'clear linux software for intel architecture':
++    elif name == 'Clear Linux OS for Intel Architecture':
+         set_bin_files(data_files, dest="/usr/bin")
+         set_conf_files(data_files, dest="/usr/share/defaults/waagent",
+                        src=["config/clearlinux/waagent.conf"])
+@@ -174,9 +173,9 @@ class install(_install):
  
      def initialize_options(self):
          _install.initialize_options(self)
