@@ -1,4 +1,4 @@
-From 85ea20a819fb5f73433835266893c12bb08bbf8e Mon Sep 17 00:00:00 2001
+From 55e6c5b7946de0155361e62bd4b9d2488547687a Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Wed, 7 Feb 2018 21:33:30 +0000
 Subject: [PATCH] Allow detection of Clear Linux OS in python3
@@ -9,16 +9,21 @@ is due to be deprecated in python 3.7 (the next minor release, see
 https://bugs.python.org/issue1322). In anticipation of this, switch to
 sourcing the os-release file in the waagent.service and reading the
 distribution information from the environment instead.
+
+Also as the distribution detection is used in the setup script, hard
+code Clear Linux as the distribution to avoid needing to work with
+detection for now.
 ---
  azurelinuxagent/common/version.py | 17 ++++++++++++++++-
  init/clearlinux/waagent.service   |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ setup.py                          |  6 +++---
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/azurelinuxagent/common/version.py b/azurelinuxagent/common/version.py
-index 890a9af..76a3a0c 100644
+index b56ff93..c5f3943 100644
 --- a/azurelinuxagent/common/version.py
 +++ b/azurelinuxagent/common/version.py
-@@ -58,6 +58,7 @@ def get_f5_platform():
+@@ -74,6 +74,7 @@ def get_checkpoint_platform():
  
  
  def get_distro():
@@ -26,7 +31,7 @@ index 890a9af..76a3a0c 100644
      if 'FreeBSD' in platform.system():
          release = re.sub('\-.*\Z', '', ustr(platform.release()))
          osinfo = ['freebsd', release, '', 'freebsd']
-@@ -67,9 +68,23 @@ def get_distro():
+@@ -86,9 +87,23 @@ def get_distro():
                                                    supported_dists=supported))
          full_name = platform.linux_distribution()[0].strip()
          osinfo.append(full_name)
@@ -63,6 +68,23 @@ index 9afee45..b2d0e08 100644
  ExecStart=/usr/bin/python -u /usr/bin/waagent -daemon
  Restart=always
  RestartSec=5
+diff --git a/setup.py b/setup.py
+index f59f829..c82811c 100755
+--- a/setup.py
++++ b/setup.py
+@@ -174,9 +174,9 @@ class install(_install):
+ 
+     def initialize_options(self):
+         _install.initialize_options(self)
+-        self.lnx_distro = DISTRO_NAME
+-        self.lnx_distro_version = DISTRO_VERSION
+-        self.lnx_distro_fullname = DISTRO_FULL_NAME
++        self.lnx_distro = "Clear Linux OS for Intel Architecture"
++        self.lnx_distro_version = "10"
++        self.lnx_distro_fullname = "Clear Linux OS for Intel Architecture"
+         self.register_service = False
+         self.skip_data_files = False
+ 
 -- 
-2.16.1
+2.17.0
 
