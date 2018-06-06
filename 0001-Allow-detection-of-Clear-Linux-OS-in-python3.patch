@@ -1,4 +1,4 @@
-From 34439cc35d857d43e1068bb8ed9628981dd76a5d Mon Sep 17 00:00:00 2001
+From 22304ad37c2f2e102bbf9585c7b0e7211b1e668f Mon Sep 17 00:00:00 2001
 From: William Douglas <william.douglas@intel.com>
 Date: Wed, 7 Feb 2018 21:33:30 +0000
 Subject: [PATCH] Allow detection of Clear Linux OS in python3
@@ -22,7 +22,7 @@ detection for now.
  5 files changed, 23 insertions(+), 9 deletions(-)
 
 diff --git a/azurelinuxagent/common/osutil/factory.py b/azurelinuxagent/common/osutil/factory.py
-index 1b4e2cb..3f4505d 100644
+index 1b4e2cb..3d06615 100644
 --- a/azurelinuxagent/common/osutil/factory.py
 +++ b/azurelinuxagent/common/osutil/factory.py
 @@ -42,8 +42,7 @@ def get_osutil(distro_name=DISTRO_NAME,
@@ -31,12 +31,12 @@ index 1b4e2cb..3f4505d 100644
  
 -    if distro_name == "clear linux os for intel architecture" \
 -            or distro_name == "clear linux software for intel architecture":
-+    if distro_name == "Clear Linux OS for Intel Architecture":
++    if distro_name == "clear linux os for intel architecture":
          return ClearLinuxUtil()
  
      if distro_name == "ubuntu":
 diff --git a/azurelinuxagent/common/version.py b/azurelinuxagent/common/version.py
-index b56ff93..c5f3943 100644
+index b56ff93..fe1ba69 100644
 --- a/azurelinuxagent/common/version.py
 +++ b/azurelinuxagent/common/version.py
 @@ -74,6 +74,7 @@ def get_checkpoint_platform():
@@ -64,16 +64,16 @@ index b56ff93..c5f3943 100644
 +    # https://pypi.python.org/pypi/distro which is built to do this as
 +    # the stdlib folks prefer this functionality live in pypi.
 +    if not osinfo or osinfo[0] == '' and os.environ.get('NAME'):
-+        osinfo = [os.environ['NAME'],
++        osinfo = [os.environ['NAME'].lower(),
 +                  os.environ['VERSION_ID'],
-+                  os.environ['ID'],
-+                  os.environ['PRETTY_NAME']]
++                  os.environ['ID'].lower(),
++                  os.environ['PRETTY_NAME'].lower()]
 +
      # The platform.py lib has issue with detecting oracle linux distribution.
      # Merge the following patch provided by oracle as a temporary fix.
      if os.path.exists("/etc/oracle-release"):
 diff --git a/azurelinuxagent/pa/deprovision/factory.py b/azurelinuxagent/pa/deprovision/factory.py
-index 5ac35a7..c8248b5 100644
+index 5ac35a7..97d3cdd 100644
 --- a/azurelinuxagent/pa/deprovision/factory.py
 +++ b/azurelinuxagent/pa/deprovision/factory.py
 @@ -35,7 +35,7 @@ def get_deprovision_handler(distro_name=DISTRO_NAME,
@@ -81,7 +81,7 @@ index 5ac35a7..c8248b5 100644
      if distro_name == "coreos":
          return CoreOSDeprovisionHandler()
 -    if distro_name == "clear linux":
-+    if distro_name == "Clear Linux OS for Intel Architecture":
++    if distro_name == "clear linux os for intel architecture":
          return ClearLinuxDeprovisionHandler()
  
      return DeprovisionHandler()
@@ -98,7 +98,7 @@ index 9afee45..b2d0e08 100644
  Restart=always
  RestartSec=5
 diff --git a/setup.py b/setup.py
-index f59f829..3f8b894 100755
+index f59f829..ad1e9d2 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -106,8 +106,7 @@ def get_data_files(name, version, fullname):
@@ -107,7 +107,7 @@ index f59f829..3f8b894 100755
                    src=["init/coreos/cloud-config.yml"])
 -    elif name == 'clear linux os for intel architecture' \
 -            or name == 'clear linux software for intel architecture':
-+    elif name == 'Clear Linux OS for Intel Architecture':
++    elif name == 'clear linux os for intel architecture':
          set_bin_files(data_files, dest="/usr/bin")
          set_conf_files(data_files, dest="/usr/share/defaults/waagent",
                         src=["config/clearlinux/waagent.conf"])
@@ -118,9 +118,9 @@ index f59f829..3f8b894 100755
 -        self.lnx_distro = DISTRO_NAME
 -        self.lnx_distro_version = DISTRO_VERSION
 -        self.lnx_distro_fullname = DISTRO_FULL_NAME
-+        self.lnx_distro = "Clear Linux OS for Intel Architecture"
++        self.lnx_distro = "clear linux os for intel architecture"
 +        self.lnx_distro_version = "10"
-+        self.lnx_distro_fullname = "Clear Linux OS for Intel Architecture"
++        self.lnx_distro_fullname = "clear linux os for intel architecture"
          self.register_service = False
          self.skip_data_files = False
  

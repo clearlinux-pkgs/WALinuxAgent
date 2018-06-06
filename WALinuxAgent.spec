@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.25
-Release  : 56
+Release  : 58
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Summary  : No detailed summary available
@@ -91,7 +91,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1527017866
+export SOURCE_DATE_EPOCH=1528323140
 python3 setup.py build -b py3
 
 %install
