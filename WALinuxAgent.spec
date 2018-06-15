@@ -18,7 +18,7 @@ Requires: WALinuxAgent-data
 Requires: WALinuxAgent-python
 BuildRequires : pbr
 BuildRequires : pip
-BuildRequires : python-dev
+
 BuildRequires : python3-dev
 BuildRequires : setuptools
 Patch1: 0001-Allow-detection-of-Clear-Linux-OS-in-python3.patch
