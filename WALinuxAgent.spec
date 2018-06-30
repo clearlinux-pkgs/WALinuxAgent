@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.25
-Release  : 59
+Release  : 60
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Summary  : No detailed summary available
@@ -15,10 +15,10 @@ Requires: WALinuxAgent-python3
 Requires: WALinuxAgent-autostart
 Requires: WALinuxAgent-config
 Requires: WALinuxAgent-data
+Requires: WALinuxAgent-license
 Requires: WALinuxAgent-python
 BuildRequires : pbr
 BuildRequires : pip
-
 BuildRequires : python3-dev
 BuildRequires : setuptools
 Patch1: 0001-Allow-detection-of-Clear-Linux-OS-in-python3.patch
@@ -42,6 +42,7 @@ Summary: bin components for the WALinuxAgent package.
 Group: Binaries
 Requires: WALinuxAgent-data
 Requires: WALinuxAgent-config
+Requires: WALinuxAgent-license
 
 %description bin
 bin components for the WALinuxAgent package.
@@ -61,6 +62,14 @@ Group: Data
 
 %description data
 data components for the WALinuxAgent package.
+
+
+%package license
+Summary: license components for the WALinuxAgent package.
+Group: Default
+
+%description license
+license components for the WALinuxAgent package.
 
 
 %package python
@@ -91,11 +100,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1528323140
+export SOURCE_DATE_EPOCH=1530395435
 python3 setup.py build -b py3
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/WALinuxAgent
+cp LICENSE.txt %{buildroot}/usr/share/doc/WALinuxAgent/LICENSE.txt
 python3 -tt setup.py build -b py3 install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
@@ -125,6 +136,10 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %files data
 %defattr(-,root,root,-)
 /usr/share/defaults/waagent/waagent.conf
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/WALinuxAgent/LICENSE.txt
 
 %files python
 %defattr(-,root,root,-)
