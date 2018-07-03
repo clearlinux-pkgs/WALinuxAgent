@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.25
-Release  : 60
+Release  : 61
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.25.tar.gz
 Summary  : No detailed summary available
