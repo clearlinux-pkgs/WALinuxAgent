@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.31
-Release  : 65
+Release  : 66
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Summary  : No detailed summary available
@@ -17,6 +17,7 @@ Requires: WALinuxAgent-config
 Requires: WALinuxAgent-data
 Requires: WALinuxAgent-license
 Requires: WALinuxAgent-python
+Requires: distro
 BuildRequires : buildreq-distutils3
 BuildRequires : distro-python3
 Patch1: 0001-Allow-Clear-Linux-detection-in-python2-and-python3.patch
@@ -37,9 +38,9 @@ autostart components for the WALinuxAgent package.
 %package bin
 Summary: bin components for the WALinuxAgent package.
 Group: Binaries
-Requires: WALinuxAgent-data
-Requires: WALinuxAgent-config
-Requires: WALinuxAgent-license
+Requires: WALinuxAgent-data = %{version}-%{release}
+Requires: WALinuxAgent-config = %{version}-%{release}
+Requires: WALinuxAgent-license = %{version}-%{release}
 
 %description bin
 bin components for the WALinuxAgent package.
@@ -72,7 +73,7 @@ license components for the WALinuxAgent package.
 %package python
 Summary: python components for the WALinuxAgent package.
 Group: Default
-Requires: WALinuxAgent-python3
+Requires: WALinuxAgent-python3 = %{version}-%{release}
 Provides: walinuxagent-python
 
 %description python
@@ -97,14 +98,14 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1537559354
-python3 setup.py build -b py3
+export SOURCE_DATE_EPOCH=1537800680
+python3 setup.py build
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/doc/WALinuxAgent
 cp LICENSE.txt %{buildroot}/usr/share/doc/WALinuxAgent/LICENSE.txt
-python3 -tt setup.py build -b py3 install --root=%{buildroot}
+python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
