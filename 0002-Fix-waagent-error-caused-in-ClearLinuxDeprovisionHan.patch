@@ -1,0 +1,27 @@
+From d1cf0996de13274da4355e9fd309f434a96e35f4 Mon Sep 17 00:00:00 2001
+From: Bun K Tan <bun.k.tan@intel.com>
+Date: Thu, 17 Jan 2019 00:45:10 +0000
+Subject: [PATCH 2/2] Fix waagent error caused in ClearLinuxDeprovisionHandler
+
+---
+ azurelinuxagent/pa/deprovision/clearlinux.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/azurelinuxagent/pa/deprovision/clearlinux.py b/azurelinuxagent/pa/deprovision/clearlinux.py
+index d74d797..6012c9b 100644
+--- a/azurelinuxagent/pa/deprovision/clearlinux.py
++++ b/azurelinuxagent/pa/deprovision/clearlinux.py
+@@ -22,8 +22,8 @@ from azurelinuxagent.pa.deprovision.default import DeprovisionHandler, \
+                                                    DeprovisionAction
+ 
+ class ClearLinuxDeprovisionHandler(DeprovisionHandler):
+-    def __init__(self, distro):
+-        self.distro = distro
++    def __init__(self):
++        super(ClearLinuxDeprovisionHandler, self).__init__()
+ 
+     def setup(self, deluser):
+         warnings, actions = super(ClearLinuxDeprovisionHandler, self).setup(deluser)
+-- 
+2.20.0
+

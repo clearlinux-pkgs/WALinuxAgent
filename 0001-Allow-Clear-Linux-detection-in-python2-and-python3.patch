@@ -1,7 +1,7 @@
-From 866798f0b04c24d71351ec7f02e015dce1d47de6 Mon Sep 17 00:00:00 2001
+From 39873560778eb1bd75cabc5ef1c9a155e4491de7 Mon Sep 17 00:00:00 2001
 From: Luis Ponce <luis.f.ponce.navarro@linux.intel.com>
 Date: Tue, 11 Sep 2018 14:02:24 -0500
-Subject: [PATCH] Allow Clear Linux detection in python2 and python3
+Subject: [PATCH 1/2] Allow Clear Linux detection in python2 and python3
 
 The version.py has three variables where stores:
 
@@ -27,10 +27,10 @@ so in this manner both scenarios above will work as expected.
  3 files changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/azurelinuxagent/common/osutil/factory.py b/azurelinuxagent/common/osutil/factory.py
-index b63e8b1..bf3294d 100644
+index 223c3a2..82271fc 100644
 --- a/azurelinuxagent/common/osutil/factory.py
 +++ b/azurelinuxagent/common/osutil/factory.py
-@@ -46,8 +46,7 @@ def get_osutil(distro_name=DISTRO_NAME,
+@@ -44,8 +44,7 @@ def get_osutil(distro_name=DISTRO_NAME,
      if distro_name == "arch":
          return ArchUtil()
  
@@ -54,7 +54,7 @@ index 21169b3..07c26bf 100644
  
      return DeprovisionHandler()
 diff --git a/setup.py b/setup.py
-index e15a2d4..373db52 100755
+index 063779a..624651c 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -107,8 +107,7 @@ def get_data_files(name, version, fullname):
@@ -68,5 +68,5 @@ index e15a2d4..373db52 100755
          set_conf_files(data_files, dest="/usr/share/defaults/waagent",
                         src=["config/clearlinux/waagent.conf"])
 -- 
-2.18.0
+2.20.0
 

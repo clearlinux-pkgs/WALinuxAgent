@@ -4,23 +4,24 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.31
-Release  : 67
+Release  : 68
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
-Requires: WALinuxAgent-bin
-Requires: WALinuxAgent-python3
-Requires: WALinuxAgent-autostart
-Requires: WALinuxAgent-config
-Requires: WALinuxAgent-data
-Requires: WALinuxAgent-license
-Requires: WALinuxAgent-python
+Requires: WALinuxAgent-autostart = %{version}-%{release}
+Requires: WALinuxAgent-bin = %{version}-%{release}
+Requires: WALinuxAgent-data = %{version}-%{release}
+Requires: WALinuxAgent-license = %{version}-%{release}
+Requires: WALinuxAgent-python = %{version}-%{release}
+Requires: WALinuxAgent-python3 = %{version}-%{release}
+Requires: WALinuxAgent-services = %{version}-%{release}
 Requires: distro
 BuildRequires : buildreq-distutils3
 BuildRequires : distro-python3
 Patch1: 0001-Allow-Clear-Linux-detection-in-python2-and-python3.patch
+Patch2: 0002-Fix-waagent-error-caused-in-ClearLinuxDeprovisionHan.patch
 
 %description
 # Microsoft Azure Linux Agent
@@ -39,19 +40,11 @@ autostart components for the WALinuxAgent package.
 Summary: bin components for the WALinuxAgent package.
 Group: Binaries
 Requires: WALinuxAgent-data = %{version}-%{release}
-Requires: WALinuxAgent-config = %{version}-%{release}
 Requires: WALinuxAgent-license = %{version}-%{release}
+Requires: WALinuxAgent-services = %{version}-%{release}
 
 %description bin
 bin components for the WALinuxAgent package.
-
-
-%package config
-Summary: config components for the WALinuxAgent package.
-Group: Default
-
-%description config
-config components for the WALinuxAgent package.
 
 
 %package data
@@ -89,22 +82,33 @@ Requires: python3-core
 python3 components for the WALinuxAgent package.
 
 
+%package services
+Summary: services components for the WALinuxAgent package.
+Group: Systemd services
+
+%description services
+services components for the WALinuxAgent package.
+
+
 %prep
 %setup -q -n WALinuxAgent-2.2.31
 %patch1 -p1
+%patch2 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1537800680
+export SOURCE_DATE_EPOCH=1547836514
+export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
 %install
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/WALinuxAgent
-cp LICENSE.txt %{buildroot}/usr/share/doc/WALinuxAgent/LICENSE.txt
+mkdir -p %{buildroot}/usr/share/package-licenses/WALinuxAgent
+cp LICENSE.txt %{buildroot}/usr/share/package-licenses/WALinuxAgent/LICENSE.txt
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
@@ -126,18 +130,13 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %exclude /usr/bin/waagent2.0
 /usr/bin/waagent
 
-%files config
-%defattr(-,root,root,-)
-%exclude /usr/lib/systemd/system/multi-user.target.wants/waagent.service
-/usr/lib/systemd/system/waagent.service
-
 %files data
 %defattr(-,root,root,-)
 /usr/share/defaults/waagent/waagent.conf
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/WALinuxAgent/LICENSE.txt
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/WALinuxAgent/LICENSE.txt
 
 %files python
 %defattr(-,root,root,-)
@@ -145,3 +144,8 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %files python3
 %defattr(-,root,root,-)
 /usr/lib/python3*/*
+
+%files services
+%defattr(-,root,root,-)
+%exclude /usr/lib/systemd/system/multi-user.target.wants/waagent.service
+/usr/lib/systemd/system/waagent.service
