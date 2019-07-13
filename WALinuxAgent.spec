@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.31
-Release  : 69
+Release  : 70
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.31.tar.gz
 Summary  : No detailed summary available
