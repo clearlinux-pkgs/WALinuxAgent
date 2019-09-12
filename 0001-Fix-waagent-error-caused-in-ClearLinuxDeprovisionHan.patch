@@ -23,5 +23,5 @@ index d74d797..6012c9b 100644
      def setup(self, deluser):
          warnings, actions = super(ClearLinuxDeprovisionHandler, self).setup(deluser)
 -- 
-2.20.0
+2.22.0
 
