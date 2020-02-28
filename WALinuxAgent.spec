@@ -4,10 +4,10 @@
 #
 Name     : WALinuxAgent
 Version  : 2.2.46
-Release  : 74
+Release  : 75
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.2.46/WALinuxAgent-2.2.46.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.2.46/WALinuxAgent-2.2.46.tar.gz
-Summary  : No detailed summary available
+Summary  : Microsoft Azure Linux Guest Agent
 Group    : Development/Tools
 License  : Apache-2.0
 Requires: WALinuxAgent-autostart = %{version}-%{release}
@@ -103,7 +103,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1581013357
+export SOURCE_DATE_EPOCH=1582904078
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
