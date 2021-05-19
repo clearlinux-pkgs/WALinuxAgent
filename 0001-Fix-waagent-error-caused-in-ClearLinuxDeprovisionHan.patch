@@ -8,14 +8,14 @@ Subject: [PATCH] Fix waagent error caused in ClearLinuxDeprovisionHandler
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/azurelinuxagent/pa/deprovision/clearlinux.py b/azurelinuxagent/pa/deprovision/clearlinux.py
-index 52c3d81..3eb32a5 100644
+index 59690a6..3eb32a5 100644
 --- a/azurelinuxagent/pa/deprovision/clearlinux.py
 +++ b/azurelinuxagent/pa/deprovision/clearlinux.py
 @@ -24,8 +24,8 @@ from azurelinuxagent.pa.deprovision.default import DeprovisionHandler, \
  # pylint: enable=W0611
  
  class ClearLinuxDeprovisionHandler(DeprovisionHandler):
--    def __init__(self, distro): # pylint: disable=W0231
+-    def __init__(self, distro):  # pylint: disable=W0231
 -        self.distro = distro
 +    def __init__(self):
 +        super(ClearLinuxDeprovisionHandler, self).__init__()
