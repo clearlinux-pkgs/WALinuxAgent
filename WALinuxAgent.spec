@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.3.0.2
-Release  : 87
+Release  : 88
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.3.0.2/WALinuxAgent-2.3.0.2.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.3.0.2/WALinuxAgent-2.3.0.2.tar.gz
 Summary  : No detailed summary available
