@@ -4,15 +4,13 @@
 #
 Name     : WALinuxAgent
 Version  : 2.3.1.1
-Release  : 90
+Release  : 91
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.3.1.1/WALinuxAgent-2.3.1.1.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.3.1.1/WALinuxAgent-2.3.1.1.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : Apache-2.0
 Requires: WALinuxAgent-autostart = %{version}-%{release}
-Requires: WALinuxAgent-bin = %{version}-%{release}
-Requires: WALinuxAgent-data = %{version}-%{release}
 Requires: WALinuxAgent-license = %{version}-%{release}
 Requires: WALinuxAgent-python = %{version}-%{release}
 Requires: WALinuxAgent-python3 = %{version}-%{release}
@@ -36,25 +34,6 @@ Group: Default
 
 %description autostart
 autostart components for the WALinuxAgent package.
-
-
-%package bin
-Summary: bin components for the WALinuxAgent package.
-Group: Binaries
-Requires: WALinuxAgent-data = %{version}-%{release}
-Requires: WALinuxAgent-license = %{version}-%{release}
-Requires: WALinuxAgent-services = %{version}-%{release}
-
-%description bin
-bin components for the WALinuxAgent package.
-
-
-%package data
-Summary: data components for the WALinuxAgent package.
-Group: Data
-
-%description data
-data components for the WALinuxAgent package.
 
 
 %package license
@@ -102,7 +81,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1626387152
+export SOURCE_DATE_EPOCH=1629128147
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -136,14 +115,6 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %defattr(-,root,root,-)
 /usr/lib/systemd/system/multi-user.target.wants/waagent.service
 
-%files bin
-%defattr(-,root,root,-)
-/usr/bin/waagent
-
-%files data
-%defattr(-,root,root,-)
-/usr/share/defaults/waagent/waagent.conf
-
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/WALinuxAgent/861181924d993ee58a17a2c3c3a3faecf895849c
@@ -158,4 +129,3 @@ ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.w
 %files services
 %defattr(-,root,root,-)
 %exclude /usr/lib/systemd/system/multi-user.target.wants/waagent.service
-/usr/lib/systemd/system/waagent.service
