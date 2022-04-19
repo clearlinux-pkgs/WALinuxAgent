@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.4.0.2
-Release  : 97
+Release  : 98
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.4.0.2/WALinuxAgent-2.4.0.2.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.4.0.2/WALinuxAgent-2.4.0.2.tar.gz
 Summary  : No detailed summary available
@@ -18,11 +18,10 @@ Requires: WALinuxAgent-python = %{version}-%{release}
 Requires: WALinuxAgent-python3 = %{version}-%{release}
 Requires: WALinuxAgent-services = %{version}-%{release}
 Requires: distro
-Requires: pyasn1
 BuildRequires : buildreq-distutils3
-BuildRequires : distro
 BuildRequires : distro-python3
-BuildRequires : pyasn1
+BuildRequires : pypi(distro)
+BuildRequires : pypi(pyasn1)
 Patch1: 0001-Fix-waagent-error-caused-in-ClearLinuxDeprovisionHan.patch
 
 %description
@@ -80,6 +79,8 @@ python components for the WALinuxAgent package.
 Summary: python3 components for the WALinuxAgent package.
 Group: Default
 Requires: python3-core
+Requires: pypi(distro)
+Requires: pypi(pyasn1)
 
 %description python3
 python3 components for the WALinuxAgent package.
@@ -103,7 +104,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1633019714
+export SOURCE_DATE_EPOCH=1650345144
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -122,9 +123,9 @@ echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
 ## Remove excluded files
-rm -f %{buildroot}/usr/bin/waagent2.0
-rm -f %{buildroot}/usr/sbin/waagent
-rm -f %{buildroot}/usr/sbin/waagent2.0
+rm -f %{buildroot}*/usr/bin/waagent2.0
+rm -f %{buildroot}*/usr/sbin/waagent
+rm -f %{buildroot}*/usr/sbin/waagent2.0
 ## install_append content
 mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/
 ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/waagent.service
