@@ -4,7 +4,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.4.0.2
-Release  : 98
+Release  : 99
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.4.0.2/WALinuxAgent-2.4.0.2.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.4.0.2/WALinuxAgent-2.4.0.2.tar.gz
 Summary  : No detailed summary available
@@ -17,9 +17,8 @@ Requires: WALinuxAgent-license = %{version}-%{release}
 Requires: WALinuxAgent-python = %{version}-%{release}
 Requires: WALinuxAgent-python3 = %{version}-%{release}
 Requires: WALinuxAgent-services = %{version}-%{release}
-Requires: distro
+Requires: pypi(distro)
 BuildRequires : buildreq-distutils3
-BuildRequires : distro-python3
 BuildRequires : pypi(distro)
 BuildRequires : pypi(pyasn1)
 Patch1: 0001-Fix-waagent-error-caused-in-ClearLinuxDeprovisionHan.patch
@@ -98,13 +97,16 @@ services components for the WALinuxAgent package.
 %setup -q -n WALinuxAgent-2.4.0.2
 cd %{_builddir}/WALinuxAgent-2.4.0.2
 %patch1 -p1
+pushd ..
+cp -a WALinuxAgent-2.4.0.2 buildavx2
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1650345144
+export SOURCE_DATE_EPOCH=1662501180
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -113,15 +115,32 @@ export CXXFLAGS="$CXXFLAGS -fno-lto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 setup.py build
+
+popd
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/WALinuxAgent
-cp %{_builddir}/WALinuxAgent-2.4.0.2/LICENSE.txt %{buildroot}/usr/share/package-licenses/WALinuxAgent/861181924d993ee58a17a2c3c3a3faecf895849c
+cp %{_builddir}/WALinuxAgent-%{version}/LICENSE.txt %{buildroot}/usr/share/package-licenses/WALinuxAgent/861181924d993ee58a17a2c3c3a3faecf895849c
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
+pushd ../buildavx2/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3 "
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
+python3 -tt setup.py build install --root=%{buildroot}-v3
+popd
 ## Remove excluded files
 rm -f %{buildroot}*/usr/bin/waagent2.0
 rm -f %{buildroot}*/usr/sbin/waagent
@@ -130,6 +149,7 @@ rm -f %{buildroot}*/usr/sbin/waagent2.0
 mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/
 ln -s ../waagent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/waagent.service
 ## install_append end
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
