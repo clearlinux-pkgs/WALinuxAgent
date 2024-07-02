@@ -1,0 +1,19 @@
+/etc/:
+/etc/logrotate.d:
+/etc/rc.d/init.d:
+/etc/rc.d:
+/etc/udev/rules.d:
+/etc/udev:
+66-azure-storage.rules
+99-azure-product-uuid.rules
+init.d
+logrotate.d
+rc.d
+rc.d
+rules.d
+udev
+udev
+waagent
+waagent.conf
+waagent.conf' ']'
+waagent.logrotate
