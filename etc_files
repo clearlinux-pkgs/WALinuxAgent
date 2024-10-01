@@ -9,11 +9,8 @@
 init.d
 logrotate.d
 rc.d
-rc.d
 rules.d
-udev
 udev
 waagent
 waagent.conf
-waagent.conf' ']'
 waagent.logrotate
