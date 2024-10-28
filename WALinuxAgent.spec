@@ -7,7 +7,7 @@
 #
 Name     : WALinuxAgent
 Version  : 2.11.1.12
-Release  : 104
+Release  : 105
 URL      : https://github.com/Azure/WALinuxAgent/archive/v2.11.1.12/WALinuxAgent-2.11.1.12.tar.gz
 Source0  : https://github.com/Azure/WALinuxAgent/archive/v2.11.1.12/WALinuxAgent-2.11.1.12.tar.gz
 Summary  : No detailed summary available
